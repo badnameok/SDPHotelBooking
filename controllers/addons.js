@@ -51,14 +51,16 @@ exports.createAddon = async (req, res, next) => {
 
 exports.updateAddon = async (req, res, next) => {
     try {
-        const addon = Addon.findOne({ _id: req.params.id });
+        const addon = await Addon.findOne({ _id: req.params.id });
         if (!addon) {
             return res.status(400).json({ success: false });
         }
-        addon.update(req.body);
-        res.status(200).json({ success: true, data: addon });
+        addon.set(req.body);
+        const ret = await addon.save()
+        res.status(200).json({ success: true, data: ret });
     }
     catch (err) {
+        console.log(err);
         res.status(400).json({ success: false , error: "Server Error"});
     }
 }
