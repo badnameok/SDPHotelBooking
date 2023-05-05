@@ -113,7 +113,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"TEST HOTEL\",\r\n    \"address\": \"Earth\",\r\n    \"telephone\": \"02-8369999\",\r\n    \"price\": \"1\"\r\n}"
+							"raw": "{\r\n    \"name\": \"TEST HOTEL 2\",\r\n    \"address\": \"Earth\",\r\n    \"telephone\": \"02-8369999\",\r\n    \"price\": \"15000\",\r\n    \"availableAddons\": [\r\n        \"64551226a2b595cb68d7adb1\"\r\n    ]\r\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/api/v1/hotels/",
@@ -538,7 +538,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"startDate\": \"2021-06-06T07:00:00Z\",\r\n    \"endDate\": \"2021-06-07T09:00:00Z\",\r\n    \"hotelID\": \"6454ff07bea40f5fc8faf665\"\r\n}"
+							"raw": "{\r\n    \"startDate\": \"2021-06-06T07:00:00Z\",\r\n    \"endDate\": \"2021-06-09T09:00:00Z\",\r\n    \"hotelID\": \"6455125da2b595cb68d7adb4\",\r\n    \"discountCode\": \"UI5OWRL3\",\r\n    \"addons\": [\r\n        \"64551226a2b595cb68d7adb1\"\r\n    ]\r\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/api/v1/booking",
@@ -799,6 +799,194 @@
 								{
 									"key": "id",
 									"value": "64133ad1f37831bb8e8875a1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Addons",
+			"item": [
+				{
+					"name": "Get All Addons",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/addons",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"addons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Code Addons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/addons/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"addons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Addon",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"WTF\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/addons",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"addons"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Addons",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"WTF2\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/addons/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"addons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Addons",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/addons/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"addons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
 								}
 							]
 						}
