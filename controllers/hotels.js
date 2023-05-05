@@ -107,7 +107,6 @@ exports.deleteHotel = async (req, res, next) => {
         if (!hotel) {
             return res.status(400).json({ success: false });
         }
-        await Booking.deleteMany({ hotel: hotel._id });
         await hotel.remove();
         res.status(200).json({
             success: true,
