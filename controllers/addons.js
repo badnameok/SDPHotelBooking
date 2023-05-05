@@ -51,10 +51,11 @@ exports.createAddon = async (req, res, next) => {
 
 exports.updateAddon = async (req, res, next) => {
     try {
-        const addon = Addon.findOneAndUpdate(req.body);
+        const addon = Addon.findOne({ _id: req.params.id });
         if (!addon) {
             return res.status(400).json({ success: false });
         }
+        addon.update(req.body);
         res.status(200).json({ success: true, data: addon });
     }
     catch (err) {

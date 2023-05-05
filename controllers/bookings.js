@@ -60,6 +60,10 @@ exports.createBooking = async (req, res, next) => {
         if(!hotel){
             return res.status(400).json({ success: false , error: "Hotel not found"});
         }
+        const days = (new Date(newBooking.endDate) - new Date(newBooking.startDate))/(1000*60*60*24);
+        if(days >= 4){
+            return res.status(400).json({ success: false , error: "Booking cannot be longer than 3 days"});
+        }
         newBooking.userID = req.user.id;
         newBooking.discountCodeID = await Util.getDiscountCodeID(newBooking.discountCode);
         newBooking.finalPrice = await Util.recalculateFinalPrice(newBooking);
@@ -99,6 +103,10 @@ exports.updateBooking = async (req, res, next) => {
         const booking = await Booking.findById(req.params.id);
         if(!booking){
             return res.status(400).json({ success: false , error: "No booking found"});
+        }
+        const days = (new Date(newBooking.endDate) - new Date(newBooking.startDate))/(1000*60*60*24);
+        if(days >= 4){
+            return res.status(400).json({ success: false , error: "Booking cannot be longer than 3 days"});
         }
         if(booking.userID != req.user.id && req.user.role != "admin"){
             return res.status(400).json({ success: false , error: "Unauthorized"});
