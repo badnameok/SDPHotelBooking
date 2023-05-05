@@ -86,15 +86,6 @@ exports.deleteDiscountCode = async (req, res, next) => {
         if (!discountCode) {
             return res.status(400).json({ success: false });
         }
-        // remove the discount code from the user
-        User.findOneAndUpdate({discountCodes: discountCode._id}, {$pull: {discountCodes: discountCode._id}});
-        // remove discount code from the booking and recalculate its final price
-        const booking = Booking.findOne({discountCode: discountCode._id});
-        if(booking){
-            booking.discountCode = undefined;
-            booking.finalPrice = await Util.recalculateFinalPrice(booking);
-            booking.save();
-        }
         await discountCode.remove();
         res.status(200).json({ success: true, data: {} });
     }

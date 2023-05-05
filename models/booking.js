@@ -9,6 +9,7 @@ const BookingSchema = new mongoose.Schema({
         - hotelID : the hotel the user booked
         - discountCodeID (optional) : the discount code the user used
         - finalPrice : the final price of the booking
+        - addons : a list of addons the user added to the booking
     */
     userID: {
         type: mongoose.Schema.ObjectId,
@@ -37,7 +38,12 @@ const BookingSchema = new mongoose.Schema({
         required: [true, 'Please add a final price'],
         min: [0, 'Price cannot be less than 0'],
     },
-    
+    addons: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Addon',
+        }
+    ],
 
 
 });

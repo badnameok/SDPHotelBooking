@@ -1,6 +1,7 @@
 const Booking = require('../models/booking');
 const Util = require('../util')
 const Hotel = require('../models/hotels');
+const Addon = require('../models/addon');
 
 // @desc    Get all bookings
 // @route   GET /api/v1/bookings
@@ -57,15 +58,28 @@ exports.createBooking = async (req, res, next) => {
         }
         const hotel = await Hotel.findById(newBooking.hotelID);
         if(!hotel){
-            console.log("Hotel not found");
             return res.status(400).json({ success: false , error: "Hotel not found"});
-        }
-        else{
-            console.log(hotel);
         }
         newBooking.userID = req.user.id;
         newBooking.discountCodeID = await Util.getDiscountCodeID(newBooking.discountCode);
         newBooking.finalPrice = await Util.recalculateFinalPrice(newBooking);
+        // validate addons
+        if(newBooking.addons){
+            for(let i = 0; i < newBooking.addons.length; i++){
+                if(hotel.availableAddons){
+                    if(!hotel.availableAddons.includes(newBooking.addons[i])){
+                        return res.status(400).json({ success: false , error: "Invalid addon"});
+                    }
+                }
+                else{
+                    newBooking.addons = [];
+                    break;
+                }
+                if(!Addon.findById(newBooking.addons[i])){
+                    return res.status(400).json({ success: false , error: "Invalid addon"});
+                }
+            }
+        }
         const booking = await Booking.create(req.body);
         res.status(201).json({ success: true, data: booking });
     }
@@ -89,8 +103,25 @@ exports.updateBooking = async (req, res, next) => {
         if(booking.userID != req.user.id && req.user.role != "admin"){
             return res.status(400).json({ success: false , error: "Unauthorized"});
         }
-        if(await Util.codeIsUsed(req.body.discountCode)){
+        if(await Util.codeIsUsed(req.body.discountCode) && !(booking.discountCode == req.body.discountCode)){
             return res.status(400).json({ success: false , error: "Discount code is already used"});
+        }
+        // validate addons
+        if(newBooking.addons){
+            for(let i = 0; i < newBooking.addons.length; i++){
+                if(hotel.availableAddons){
+                    if(!hotel.availableAddons.includes(newBooking.addons[i])){
+                        return res.status(400).json({ success: false , error: "Invalid addon"});
+                    }
+                }
+                else{
+                    newBooking.addons = [];
+                    break;
+                }
+                if(!Addon.findById(newBooking.addons[i])){
+                    return res.status(400).json({ success: false , error: "Invalid addon"});
+                }
+            }
         }
         const updatedBooking = await Booking.findByIdAndUpdate(req.params.id, req.body);
         updateBooking.finalPrice = await Util.recalculateFinalPrice(updatedBooking);
@@ -99,7 +130,6 @@ exports.updateBooking = async (req, res, next) => {
         res.status(200).json({ success: true, data: ret });
     }
     catch (err) {
-        console.log(err);
         res.status(400).json({ success: false , error: "Server Error"});
     }
 }

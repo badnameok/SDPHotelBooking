@@ -33,7 +33,8 @@ async function codeIsUsed(discountCode) {
 
 
 async function getDiscountCodeID(discountCode) {
-    const discount = await DiscountCode.findOne({ code: discountCode });
+    const discount = await DiscountCode.findOne({ discountCode: discountCode });
+    console.log("DISCOUNT:",discount);
     return discount ? discount._id : undefined;
 }
     

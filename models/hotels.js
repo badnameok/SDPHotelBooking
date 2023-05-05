@@ -23,16 +23,13 @@ const HotelSchema = new mongoose.Schema({
         required: [true, 'Please add a price'],
         min: [0, 'Price cannot be less than 0']
     },
-    // a hotel can contain multiple available addons, from the addons collection
-    // the addons are stored as an array of ObjectIds
-    /*
     availableAddons: [
         {
             type: mongoose.Schema.ObjectId,
             ref: 'Addon'
         }
     ],
-    */
+    
 });
 
 HotelSchema.pre('remove', async function(next) {

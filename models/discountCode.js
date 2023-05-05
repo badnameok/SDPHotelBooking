@@ -26,7 +26,7 @@ const DiscountCodeSchema = new mongoose.Schema({
     
 });
 
-DiscountCodeSchema.pre('remove', async function(next) {
+DiscountCodeSchema.pre('remove' , async function(next) {
     console.log(`Discount code ${this._id} being removed`);
     const bookings = await this.model('Booking').find({ discountCodeID: this._id });
     bookings.forEach(async (booking) => {
