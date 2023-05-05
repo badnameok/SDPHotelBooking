@@ -7,6 +7,7 @@ const BookingSchema = new mongoose.Schema({
         - startDate : the date the booking starts
         - endDate : the date the booking ends
         - hotelID : the hotel the user booked
+        - discountCodeID (optional) : the discount code the user used
         - finalPrice : the final price of the booking
     */
     userID: {
@@ -27,11 +28,18 @@ const BookingSchema = new mongoose.Schema({
         ref: 'Hotel',
         required: [true, 'Please add a hotel ID'],
     },
+    discountCodeID: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'DiscountCode',
+    },
     finalPrice: {
         type: Number,
         required: [true, 'Please add a final price'],
         min: [0, 'Price cannot be less than 0'],
     },
+    
+
+
 });
 
 module.exports = mongoose.model('Booking', BookingSchema);

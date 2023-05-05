@@ -1,4 +1,6 @@
 const Booking = require('../models/booking');
+const Util = require('../util')
+const Hotel = require('../models/hotels');
 
 // @desc    Get all bookings
 // @route   GET /api/v1/bookings
@@ -50,8 +52,20 @@ exports.createBooking = async (req, res, next) => {
     // startDate, endDate, hotelID, finalPrice
     try {
         const newBooking = req.body;
-        console.log(req.user)
+        if(await Util.codeIsUsed(newBooking.discountCode)){
+            return res.status(400).json({ success: false , error: "Discount code is already used"});
+        }
+        const hotel = await Hotel.findById(newBooking.hotelID);
+        if(!hotel){
+            console.log("Hotel not found");
+            return res.status(400).json({ success: false , error: "Hotel not found"});
+        }
+        else{
+            console.log(hotel);
+        }
         newBooking.userID = req.user.id;
+        newBooking.discountCodeID = await Util.getDiscountCodeID(newBooking.discountCode);
+        newBooking.finalPrice = await Util.recalculateFinalPrice(newBooking);
         const booking = await Booking.create(req.body);
         res.status(201).json({ success: true, data: booking });
     }
@@ -75,7 +89,13 @@ exports.updateBooking = async (req, res, next) => {
         if(booking.userID != req.user.id && req.user.role != "admin"){
             return res.status(400).json({ success: false , error: "Unauthorized"});
         }
-        const ret = await Booking.findByIdAndUpdate(req.params.id, req.body);
+        if(await Util.codeIsUsed(req.body.discountCode)){
+            return res.status(400).json({ success: false , error: "Discount code is already used"});
+        }
+        const updatedBooking = await Booking.findByIdAndUpdate(req.params.id, req.body);
+        updateBooking.finalPrice = await Util.recalculateFinalPrice(updatedBooking);
+        newBooking.discountCodeID = await Util.getDiscountCodeID(newBooking.discountCode);
+        const ret = await updatedBooking.save();
         res.status(200).json({ success: true, data: ret });
     }
     catch (err) {

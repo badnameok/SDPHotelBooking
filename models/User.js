@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    availableDiscountCodes: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'DiscountCode',
+    }, ],
 });
 
 UserSchema.pre('save', async function(next) {

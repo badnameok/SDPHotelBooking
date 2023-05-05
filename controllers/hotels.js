@@ -1,5 +1,6 @@
 const Hotel = require('../models/hotels');
 const Booking = require('../models/booking');
+const Util = require('../util');
 
 // @desc    Get all hotels
 // @route   GET /api/v1/hotels
@@ -87,6 +88,13 @@ exports.updateHotel = async (req, res, next) => {
         if (!hotel) {
             return res.status(400).json({ success: false });
         }
+        // for all bookings with this hotel, recalculate the final price
+        const bookings = await Booking.find({hotel: req.params.id});
+        for (let i = 0; i < bookings.length; i++) {
+            const booking = bookings[i];
+            booking.finalPrice = await Util.recalculateFinalPrice(booking);
+            await booking.save();
+        }
         res.status(200).json({
             success: true,
             data: hotel
@@ -119,5 +127,4 @@ exports.deleteHotel = async (req, res, next) => {
     }
 }
 
-console.log("hotels.js loaded");
 module.exports = exports;
